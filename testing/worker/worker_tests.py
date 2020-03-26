@@ -2,8 +2,11 @@ import unittest
 
 from worker import Worker
 
+class BaseTestCase(unittest.TestCase):
+    def assertContains(self, value, text):
+        self.assertTrue(value in str(text))
 
-class WorkerTests(unittest.TestCase):
+class WorkerTests(BaseTestCase):
     def test_init_when_correct_name_salary_energy_should_set_correct_attributes_and_money_0(self):
         name = 'Test User'
         salary = 1000
@@ -20,7 +23,9 @@ class WorkerTests(unittest.TestCase):
         salary = 1000
         energy = 5
         worker = Worker(name, salary, energy)
+
         worker.rest()
+
         self.assertEqual(worker.energy, energy + 1)
 
     def test_work_when_energy_is_0_should_raise_error(self):
@@ -33,6 +38,7 @@ class WorkerTests(unittest.TestCase):
             worker.work()
 
         self.assertIsNotNone(context.exception)
+        self.assertContains(f'{name} does not have enough energy.', context.exception)
 
     def test_work_when_energy_is_greater_than_0_should_increase_money_by_salary(self):
         name = 'Test User'
@@ -44,12 +50,14 @@ class WorkerTests(unittest.TestCase):
         worker.work()
         self.assertEqual(worker.money, 2 * worker.salary)
 
-    def test_5(self):
+    def test_work_when_energy_is_greater_than_0_should_decrease_energy(self):
         name = 'Test User'
         salary = 1000
         energy = 5
         worker = Worker(name, salary, energy)
+
         worker.work()
+
         self.assertEqual(worker.energy, energy - 1)
 
     def test_get_info_should_return_correct_result(self):

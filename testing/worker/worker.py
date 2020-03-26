@@ -7,7 +7,7 @@ class Worker:
 
     def work(self):
         if self.energy <= 0:
-            raise Exception('Not enough energy.')
+            raise Exception(f'{self.name} does not have enough energy.')
 
         self.money += self.salary
         self.energy -= 1
